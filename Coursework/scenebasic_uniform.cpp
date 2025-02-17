@@ -18,6 +18,17 @@ using glm::vec4;
 using glm::mat3;
 using glm::mat4;
 
+#include <GLFW/glfw3.h>
+
+//Relative position within world space
+vec3 cameraPosition = vec3(0.0f, 0.0f, 10.0f);
+//The direction of travel
+vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
+//Up position within world space
+vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
+
+float lastFrameTime = 0.0f;
+
 SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f) 
 {
     mesh = ObjMesh::load("media/coridor.obj", true);
@@ -29,7 +40,7 @@ void SceneBasic_Uniform::initScene()
     glEnable(GL_DEPTH_TEST);
 
     model = mat4(1.0f);
-    view = glm::lookAt(vec3(0.5f, 0.75f, 0.75f), vec3(0.0f, 0.0f, 0.0f), vec3(0.0f, 1.0f, 0.0f));
+    view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
     projection = mat4(1.0f);
 
     float x, z;
@@ -65,7 +76,30 @@ void SceneBasic_Uniform::compile()
 
 void SceneBasic_Uniform::update( float t )
 {
-	//update your angle here
+    GLFWwindow* window = glfwGetCurrentContext();
+    float deltaTime = t - lastFrameTime;
+    lastFrameTime = t;
+    std::cout << "Delta time (dt): " << deltaTime << std::endl;
+    const float movementSpeed = 5.0f * deltaTime;
+
+    if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
+    {
+        cameraPosition += movementSpeed * cameraFront;
+    }
+    if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
+    {
+        cameraPosition -= movementSpeed * cameraFront;
+    }
+    if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
+    {
+        cameraPosition -= normalize(cross(cameraFront, cameraUp)) * movementSpeed;
+    }
+    if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
+    {
+        cameraPosition += normalize(cross(cameraFront, cameraUp)) * movementSpeed;
+    }
+
+    view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
 }
 
 void SceneBasic_Uniform::render()
@@ -92,7 +126,7 @@ void SceneBasic_Uniform::resize(int w, int h)
 
 void SceneBasic_Uniform::setMatrices() 
 {
-    mat4 mv = mat4(1.0f);
+    mat4 mv = view * model;
     prog.setUniform("ModelViewMatrix", mv);
     prog.setUniform("NormalMatrix", mat3(mv));
     prog.setUniform("MVP", projection * mv);
