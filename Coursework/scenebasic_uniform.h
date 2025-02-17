@@ -5,16 +5,20 @@
 
 #include <glad/glad.h>
 #include "helper/glslprogram.h"
+#include <glm/glm.hpp>
+#include <glm/gtc/matrix_transform.hpp>
+#include "helper/objmesh.h"
+#include "glm/glm.hpp"
 
 class SceneBasic_Uniform : public Scene
 {
 private:
-    GLuint vaoHandle;
-    GLSLProgram prog;
     float angle;
+    std::unique_ptr<ObjMesh> mesh;
 
+    GLSLProgram prog;
+    void setMatrices();
     void compile();
-
 public:
     SceneBasic_Uniform();
 
