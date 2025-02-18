@@ -1,2 +1,11 @@
-﻿  scenebasic_uniform.cpp
+﻿  main.cpp
+  scenebasic_uniform.cpp
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(151,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(152,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(156,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(157,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(158,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(159,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
+glfw3.lib(input.obj) : warning LNK4099: PDB '' was not found with 'glfw3.lib(input.obj)' or at ''; linking object as if no debug info
   Project_Template.vcxproj -> C:\Users\jason\University\COMP3015_CW1\Coursework\x64\Debug\Project_Template.exe

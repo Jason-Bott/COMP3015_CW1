@@ -4,6 +4,7 @@
 #include "helper/scene.h"
 
 #include <glad/glad.h>
+#include <GLFW/glfw3.h>
 #include "helper/glslprogram.h"
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
@@ -19,6 +20,7 @@ private:
     GLSLProgram prog;
     void setMatrices();
     void compile();
+    static void mouse_callback(GLFWwindow* window, double xpos, double ypos);
 public:
     SceneBasic_Uniform();
 

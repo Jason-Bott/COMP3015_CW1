@@ -29,6 +29,12 @@ vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
 
 float lastFrameTime = 0.0f;
 
+float lastX = 800.0f / 2.0;
+float lastY = 600.0f / 2.0;
+float yaw = -90.0f;
+float pitch = 0.0f;
+bool firstMouse = true;
+
 SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f) 
 {
     mesh = ObjMesh::load("media/coridor.obj", true);
@@ -42,6 +48,10 @@ void SceneBasic_Uniform::initScene()
     model = mat4(1.0f);
     view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
     projection = mat4(1.0f);
+
+    GLFWwindow* window = glfwGetCurrentContext();
+    glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+    glfwSetCursorPosCallback(window, SceneBasic_Uniform::mouse_callback);
 
     float x, z;
     for (int i = 0; i < 3; i++) {
@@ -77,11 +87,13 @@ void SceneBasic_Uniform::compile()
 void SceneBasic_Uniform::update( float t )
 {
     GLFWwindow* window = glfwGetCurrentContext();
+
     float deltaTime = t - lastFrameTime;
     lastFrameTime = t;
-    std::cout << "Delta time (dt): " << deltaTime << std::endl;
+
     const float movementSpeed = 5.0f * deltaTime;
 
+    //WASD
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
         cameraPosition += movementSpeed * cameraFront;
@@ -130,4 +142,37 @@ void SceneBasic_Uniform::setMatrices()
     prog.setUniform("ModelViewMatrix", mv);
     prog.setUniform("NormalMatrix", mat3(mv));
     prog.setUniform("MVP", projection * mv);
+}
+
+void SceneBasic_Uniform::mouse_callback(GLFWwindow* window, double xpos, double ypos)
+{
+    if (firstMouse)
+    {
+        lastX = xpos;
+        lastY = ypos;
+        firstMouse = false;
+    }
+
+    float xoffset = xpos - lastX;
+    float yoffset = lastY - ypos; // Inverted y-axis
+    lastX = xpos;
+    lastY = ypos;
+
+    const float sensitivity = 0.1f;
+    xoffset *= sensitivity;
+    yoffset *= sensitivity;
+
+    yaw += xoffset;
+    pitch += yoffset;
+
+    // Constrain pitch to prevent flipping
+    if (pitch > 89.0f) pitch = 89.0f;
+    if (pitch < -89.0f) pitch = -89.0f;
+
+    // Update camera direction
+    glm::vec3 front;
+    front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
+    front.y = sin(glm::radians(pitch));
+    front.z = sin(glm::radians(yaw)) * cos(glm::radians(pitch));
+    cameraFront = glm::normalize(front);
 }
