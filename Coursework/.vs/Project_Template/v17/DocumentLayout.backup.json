@@ -3,12 +3,12 @@
   "WorkspaceRootPath": "C:\\Users\\jason\\University\\COMP3015_CW1\\Coursework\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{2424A6AC-480B-441A-94EA-86C5C10C6ABF}|Project_Template.vcxproj|C:\\Users\\jason\\University\\COMP3015_CW1\\Coursework\\scenebasic_uniform.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
-      "RelativeMoniker": "D:0:0:{2424A6AC-480B-441A-94EA-86C5C10C6ABF}|Project_Template.vcxproj|solutionrelative:scenebasic_uniform.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
-    },
-    {
       "AbsoluteMoniker": "D:0:0:{2424A6AC-480B-441A-94EA-86C5C10C6ABF}|Project_Template.vcxproj|C:\\Users\\jason\\University\\COMP3015_CW1\\Coursework\\scenebasic_uniform.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
       "RelativeMoniker": "D:0:0:{2424A6AC-480B-441A-94EA-86C5C10C6ABF}|Project_Template.vcxproj|solutionrelative:scenebasic_uniform.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{2424A6AC-480B-441A-94EA-86C5C10C6ABF}|Project_Template.vcxproj|C:\\Users\\jason\\University\\COMP3015_CW1\\Coursework\\scenebasic_uniform.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{2424A6AC-480B-441A-94EA-86C5C10C6ABF}|Project_Template.vcxproj|solutionrelative:scenebasic_uniform.h||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,11 +18,11 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 1,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
+              "DocumentIndex": 1,
               "Title": "scenebasic_uniform.h",
               "DocumentMoniker": "C:\\Users\\jason\\University\\COMP3015_CW1\\Coursework\\scenebasic_uniform.h",
               "RelativeDocumentMoniker": "scenebasic_uniform.h",
@@ -30,18 +30,17 @@
               "RelativeToolTip": "scenebasic_uniform.h",
               "ViewState": "AgIAAAAAAAAAAAAAAAAlwAYAAAAXAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
-              "WhenOpened": "2025-02-18T10:06:22.251Z",
-              "EditorCaption": ""
+              "WhenOpened": "2025-02-18T10:06:22.251Z"
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
+              "DocumentIndex": 0,
               "Title": "scenebasic_uniform.cpp",
               "DocumentMoniker": "C:\\Users\\jason\\University\\COMP3015_CW1\\Coursework\\scenebasic_uniform.cpp",
               "RelativeDocumentMoniker": "scenebasic_uniform.cpp",
               "ToolTip": "C:\\Users\\jason\\University\\COMP3015_CW1\\Coursework\\scenebasic_uniform.cpp",
               "RelativeToolTip": "scenebasic_uniform.cpp",
-              "ViewState": "AgIAACYAAAAAAAAAAAAlwDUAAABJAAAAAAAAAA==",
+              "ViewState": "AgIAAJwAAAAAAAAAAAAAACIAAAAUAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
               "WhenOpened": "2025-02-11T09:42:28.587Z",
               "EditorCaption": ""

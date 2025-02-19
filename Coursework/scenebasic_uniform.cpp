@@ -20,15 +20,19 @@ using glm::mat4;
 
 #include <GLFW/glfw3.h>
 
+//For working out delta time
+float lastFrameTime = 0.0f;
+
 //Relative position within world space
 vec3 cameraPosition = vec3(0.0f, 0.0f, 10.0f);
 //The direction of travel
 vec3 cameraFront = vec3(0.0f, 0.0f, -1.0f);
 //Up position within world space
 vec3 cameraUp = vec3(0.0f, 1.0f, 0.0f);
+//Fixed height of camera
+float fixedY = 0.0f;
 
-float lastFrameTime = 0.0f;
-
+//For mouse controls
 float lastX = 800.0f / 2.0;
 float lastY = 600.0f / 2.0;
 float yaw = -90.0f;
@@ -93,24 +97,27 @@ void SceneBasic_Uniform::update( float t )
 
     const float movementSpeed = 5.0f * deltaTime;
 
-    //WASD
+    vec3 forwardDir = normalize(vec3(cameraFront.x, 0.0f, cameraFront.z));
+    vec3 rightDir = normalize(cross(forwardDir, cameraUp));
+
     if (glfwGetKey(window, GLFW_KEY_W) == GLFW_PRESS)
     {
-        cameraPosition += movementSpeed * cameraFront;
+        cameraPosition += movementSpeed * forwardDir;
     }
     if (glfwGetKey(window, GLFW_KEY_S) == GLFW_PRESS)
     {
-        cameraPosition -= movementSpeed * cameraFront;
+        cameraPosition -= movementSpeed * forwardDir;
     }
     if (glfwGetKey(window, GLFW_KEY_A) == GLFW_PRESS)
     {
-        cameraPosition -= normalize(cross(cameraFront, cameraUp)) * movementSpeed;
+        cameraPosition -= rightDir * movementSpeed;
     }
     if (glfwGetKey(window, GLFW_KEY_D) == GLFW_PRESS)
     {
-        cameraPosition += normalize(cross(cameraFront, cameraUp)) * movementSpeed;
+        cameraPosition += rightDir * movementSpeed;
     }
 
+    cameraPosition.y = fixedY;
     view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
 }
 
@@ -154,7 +161,7 @@ void SceneBasic_Uniform::mouse_callback(GLFWwindow* window, double xpos, double 
     }
 
     float xoffset = xpos - lastX;
-    float yoffset = lastY - ypos; // Inverted y-axis
+    float yoffset = lastY - ypos;
     lastX = xpos;
     lastY = ypos;
 
@@ -165,11 +172,9 @@ void SceneBasic_Uniform::mouse_callback(GLFWwindow* window, double xpos, double 
     yaw += xoffset;
     pitch += yoffset;
 
-    // Constrain pitch to prevent flipping
     if (pitch > 89.0f) pitch = 89.0f;
     if (pitch < -89.0f) pitch = -89.0f;
 
-    // Update camera direction
     glm::vec3 front;
     front.x = cos(glm::radians(yaw)) * cos(glm::radians(pitch));
     front.y = sin(glm::radians(pitch));
