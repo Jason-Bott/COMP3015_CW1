@@ -45,7 +45,7 @@ bool negative = true;
 
 SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f) 
 {
-    mesh = ObjMesh::load("media/coridor.obj", true);
+    corridor = ObjMesh::load("media/corridor.obj", true);
 }
 
 void SceneBasic_Uniform::initScene()
@@ -118,7 +118,7 @@ void SceneBasic_Uniform::update( float t )
 
 
     //Lights
-    prog.setUniform("lights[0].Position", view * vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    prog.setUniform("lights[0].Position", view * vec4(-1.0f, 1.0f, 0.0f, 1.0f));
     prog.setUniform("lights[1].Position", view * vec4(1.0f, 1.0f, 0.0f, 1.0f));
 
     if (negative) {
@@ -151,7 +151,7 @@ void SceneBasic_Uniform::render()
 
     model = mat4(1.0f);
     setMatrices();
-    mesh->render();
+    corridor->render();
 }
 
 void SceneBasic_Uniform::resize(int w, int h)

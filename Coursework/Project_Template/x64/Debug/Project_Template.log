@@ -1,8 +1,10 @@
-﻿  scenebasic_uniform.cpp
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(158,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(159,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(163,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(164,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(165,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(166,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+﻿  main.cpp
+  scenebasic_uniform.cpp
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(177,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(178,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(182,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(183,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(184,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(185,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+  Generating Code...
   Project_Template.vcxproj -> C:\Users\jason\University\COMP3015_CW1\Coursework\x64\Debug\Project_Template.exe

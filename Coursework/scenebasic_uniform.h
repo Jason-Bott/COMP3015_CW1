@@ -15,7 +15,7 @@ class SceneBasic_Uniform : public Scene
 {
 private:
     float angle;
-    std::unique_ptr<ObjMesh> mesh;
+    std::unique_ptr<ObjMesh> corridor;
 
     GLSLProgram prog;
     void setMatrices();
