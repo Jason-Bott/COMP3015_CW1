@@ -39,6 +39,10 @@ float yaw = -90.0f;
 float pitch = 0.0f;
 bool firstMouse = true;
 
+//For lighting animation
+float brightness = 0.2f;
+bool negative = true;
+
 SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f) 
 {
     mesh = ObjMesh::load("media/coridor.obj", true);
@@ -57,22 +61,14 @@ void SceneBasic_Uniform::initScene()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, SceneBasic_Uniform::mouse_callback);
 
-    float x, z;
-    for (int i = 0; i < 3; i++) {
-        std::stringstream name;
-        name << "lights[" << i << "].Position";
-        x = 2.0f * cosf((glm::two_pi<float>() / 3) * i);
-        z = 2.0f * sinf((glm::two_pi<float>() / 3) * i);
-        prog.setUniform(name.str().c_str(), view * vec4(x, 1.2f, z + 1.0f, 1.0f));
-    }
+    prog.setUniform("lights[0].Position", view * vec4(-1.0f, 1.0f, 0.0f, 1.0f));
+    prog.setUniform("lights[1].Position", view * vec4(1.0f, 1.0f, 0.0f, 1.0f));
 
-    prog.setUniform("lights[0].L", vec3(0.0f, 0.0f, 0.8f));
-    prog.setUniform("lights[1].L", vec3(0.0f, 0.8f, 0.0f));
-    prog.setUniform("lights[2].L", vec3(0.8f, 0.0f, 0.0f));
+    prog.setUniform("lights[0].L", vec3(0.8f, 0.0f, 0.0f));
+    prog.setUniform("lights[1].L", vec3(0.8f, 0.0f, 0.0f));
 
-    prog.setUniform("lights[0].La", vec3(0.0f, 0.0f, 0.2f));
-    prog.setUniform("lights[1].La", vec3(0.0f, 0.2f, 0.0f));
-    prog.setUniform("lights[2].La", vec3(0.2f, 0.0f, 0.0f));
+    prog.setUniform("lights[0].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[1].La", vec3(brightness, 0.0f, 0.0f));
 }
 
 void SceneBasic_Uniform::compile()
@@ -95,8 +91,8 @@ void SceneBasic_Uniform::update( float t )
     float deltaTime = t - lastFrameTime;
     lastFrameTime = t;
 
+    //Movement
     const float movementSpeed = 5.0f * deltaTime;
-
     vec3 forwardDir = normalize(vec3(cameraFront.x, 0.0f, cameraFront.z));
     vec3 rightDir = normalize(cross(forwardDir, cameraUp));
 
@@ -119,6 +115,29 @@ void SceneBasic_Uniform::update( float t )
 
     cameraPosition.y = fixedY;
     view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
+
+
+    //Lights
+    prog.setUniform("lights[0].Position", view * vec4(0.0f, 0.0f, 0.0f, 1.0f));
+    prog.setUniform("lights[1].Position", view * vec4(1.0f, 1.0f, 0.0f, 1.0f));
+
+    if (negative) {
+        brightness -= deltaTime / 10;
+        if (brightness < 0.0f) {
+            brightness = 0.0f;
+            negative = false;
+        }
+    }
+    else {
+        brightness += deltaTime / 10;
+        if (brightness > 0.2f) {
+            brightness = 0.2f;
+            negative = true;
+        }
+    }
+
+    prog.setUniform("lights[0].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[1].La", vec3(brightness, 0.0f, 0.0f));
 }
 
 void SceneBasic_Uniform::render()
