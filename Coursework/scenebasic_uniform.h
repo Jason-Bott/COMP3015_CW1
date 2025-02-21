@@ -9,12 +9,13 @@
 #include <glm/glm.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 #include "helper/objmesh.h"
-#include "glm/glm.hpp"
+#include "helper/skybox.h"
 
 class SceneBasic_Uniform : public Scene
 {
 private:
     float angle;
+    SkyBox sky;
     std::unique_ptr<ObjMesh> corridor;
 
     GLSLProgram prog;

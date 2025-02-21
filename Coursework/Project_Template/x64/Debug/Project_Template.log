@@ -1,10 +1,8 @@
-﻿  main.cpp
-  scenebasic_uniform.cpp
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(177,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(178,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(182,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(183,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(184,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(185,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-  Generating Code...
+﻿  scenebasic_uniform.cpp
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(211,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(212,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(216,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(217,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(218,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(219,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   Project_Template.vcxproj -> C:\Users\jason\University\COMP3015_CW1\Coursework\x64\Debug\Project_Template.exe

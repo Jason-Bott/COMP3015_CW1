@@ -12,6 +12,7 @@ using std::cerr;
 using std::endl;
 
 #include "helper/glutils.h"
+#include "helper/texture.h"
 
 using glm::vec3;
 using glm::vec4;
@@ -40,10 +41,10 @@ float pitch = 0.0f;
 bool firstMouse = true;
 
 //For lighting animation
-float brightness = 0.2f;
+float brightness = 0.0f;
 bool negative = true;
 
-SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f) 
+SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
 {
     corridor = ObjMesh::load("media/corridor.obj", true);
 }
@@ -61,14 +62,33 @@ void SceneBasic_Uniform::initScene()
     glfwSetInputMode(window, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
     glfwSetCursorPosCallback(window, SceneBasic_Uniform::mouse_callback);
 
-    prog.setUniform("lights[0].Position", view * vec4(-1.0f, 1.0f, 0.0f, 1.0f));
-    prog.setUniform("lights[1].Position", view * vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    //Skybox
+    GLuint cubeTex = Texture::loadCubeMap("media/skybox/space");
+
+    glActiveTexture(GL_TEXTURE0);
+    glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
+
+    //Lights
+    prog.setUniform("lights[0].Position", view * vec4(-1.0f, 1.0f, -10.0f, 1.0f));
+    prog.setUniform("lights[1].Position", view * vec4(1.0f, 1.0f, -10.0f, 1.0f));
+    prog.setUniform("lights[2].Position", view * vec4(-1.0f, 1.0f, 0.0f, 1.0f));
+    prog.setUniform("lights[3].Position", view * vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    prog.setUniform("lights[4].Position", view * vec4(-1.0f, 1.0f, 10.0f, 1.0f));
+    prog.setUniform("lights[5].Position", view * vec4(1.0f, 1.0f, 10.0f, 1.0f));
 
     prog.setUniform("lights[0].L", vec3(0.8f, 0.0f, 0.0f));
     prog.setUniform("lights[1].L", vec3(0.8f, 0.0f, 0.0f));
+    prog.setUniform("lights[2].L", vec3(0.8f, 0.0f, 0.0f));
+    prog.setUniform("lights[3].L", vec3(0.8f, 0.0f, 0.0f));
+    prog.setUniform("lights[4].L", vec3(0.8f, 0.0f, 0.0f));
+    prog.setUniform("lights[5].L", vec3(0.8f, 0.0f, 0.0f));
 
     prog.setUniform("lights[0].La", vec3(brightness, 0.0f, 0.0f));
     prog.setUniform("lights[1].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[2].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[3].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[4].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[5].La", vec3(brightness, 0.0f, 0.0f));
 }
 
 void SceneBasic_Uniform::compile()
@@ -118,36 +138,50 @@ void SceneBasic_Uniform::update( float t )
 
 
     //Lights
-    prog.setUniform("lights[0].Position", view * vec4(-1.0f, 1.0f, 0.0f, 1.0f));
-    prog.setUniform("lights[1].Position", view * vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    prog.setUniform("lights[0].Position", view * vec4(-1.0f, 1.0f, -10.0f, 1.0f));
+    prog.setUniform("lights[1].Position", view * vec4(1.0f, 1.0f, -10.0f, 1.0f));
+    prog.setUniform("lights[2].Position", view * vec4(-1.0f, 1.0f, 0.0f, 1.0f));
+    prog.setUniform("lights[3].Position", view * vec4(1.0f, 1.0f, 0.0f, 1.0f));
+    prog.setUniform("lights[4].Position", view * vec4(-1.0f, 1.0f, 10.0f, 1.0f));
+    prog.setUniform("lights[5].Position", view * vec4(1.0f, 1.0f, 10.0f, 1.0f));
 
     if (negative) {
         brightness -= deltaTime / 10;
-        if (brightness < 0.0f) {
-            brightness = 0.0f;
+        if (brightness < -0.2f) {
+            brightness = -0.2f;
             negative = false;
         }
     }
     else {
         brightness += deltaTime / 10;
-        if (brightness > 0.2f) {
-            brightness = 0.2f;
+        if (brightness > -0.1f) {
+            brightness = -0.1f;
             negative = true;
         }
     }
 
     prog.setUniform("lights[0].La", vec3(brightness, 0.0f, 0.0f));
     prog.setUniform("lights[1].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[2].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[3].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[4].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[5].La", vec3(brightness, 0.0f, 0.0f));
 }
 
 void SceneBasic_Uniform::render()
 {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+    //Skybox
+    model = mat4(1.0f);
+    setMatrices();
+    sky.render();
+
+    //Corridor
     prog.setUniform("Material.Kd", vec3(0.4f, 0.4f, 0.4f));
     prog.setUniform("Material.Ka", vec3(0.5f, 0.5f, 0.5f));
-    prog.setUniform("Material.Ks", vec3(0.9f, 0.9f, 0.9f));
-    prog.setUniform("Material.Shininess", 180.0f);
+    prog.setUniform("Material.Ks", vec3(0.2f, 0.2f, 0.2f));
+    prog.setUniform("Material.Shininess", 80.0f);
 
     model = mat4(1.0f);
     setMatrices();
