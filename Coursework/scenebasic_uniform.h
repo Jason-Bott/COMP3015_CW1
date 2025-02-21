@@ -16,7 +16,16 @@ class SceneBasic_Uniform : public Scene
 private:
     float angle;
     SkyBox sky;
-    std::unique_ptr<ObjMesh> corridor;
+
+    //Objects
+    std::unique_ptr<ObjMesh> floor;
+    std::unique_ptr<ObjMesh> windowWall;
+    std::unique_ptr<ObjMesh> wall;
+    std::unique_ptr<ObjMesh> ceiling;
+
+    //Textures
+    GLuint floorTexture;
+    GLuint wallTexture;
 
     GLSLProgram prog;
     void setMatrices();

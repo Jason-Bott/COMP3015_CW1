@@ -46,7 +46,15 @@ bool negative = true;
 
 SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
 {
-    corridor = ObjMesh::load("media/corridor.obj", true);
+    //Objects
+    floor = ObjMesh::load("media/floor.obj", true);
+    windowWall = ObjMesh::load("media/windowWall.obj", true);
+    wall = ObjMesh::load("media/wall.obj", true);
+    ceiling = ObjMesh::load("media/ceiling.obj", true);
+
+    //Textures
+    floorTexture = Texture::loadTexture("media/textures/floor.png");
+    wallTexture = Texture::loadTexture("media/textures/wall.png");
 }
 
 void SceneBasic_Uniform::initScene()
@@ -64,7 +72,6 @@ void SceneBasic_Uniform::initScene()
 
     //Skybox
     GLuint cubeTex = Texture::loadCubeMap("media/skybox/space");
-
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
 
@@ -177,15 +184,52 @@ void SceneBasic_Uniform::render()
     setMatrices();
     sky.render();
 
-    //Corridor
+    prog.setUniform("Material.Kd", vec3(0.4f, 0.4f, 0.4f));
+    prog.setUniform("Material.Ka", vec3(0.5f, 0.5f, 0.5f));
+    prog.setUniform("Material.Ks", vec3(0.2f, 0.2f, 0.2f));
+    prog.setUniform("Material.Shininess", 80.0f);
+
+    //Floor
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(0.0f, -2.0f, 0.0f));
+    setMatrices();
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, floorTexture);
+    floor->render();
+
+    //Window Wall
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(-2.2f, 0.0f, 0.0f));
+    setMatrices();
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, wallTexture);
+    windowWall->render();
+
+    //Wall
     prog.setUniform("Material.Kd", vec3(0.4f, 0.4f, 0.4f));
     prog.setUniform("Material.Ka", vec3(0.5f, 0.5f, 0.5f));
     prog.setUniform("Material.Ks", vec3(0.2f, 0.2f, 0.2f));
     prog.setUniform("Material.Shininess", 80.0f);
 
     model = mat4(1.0f);
+    model = glm::translate(model, vec3(2.0f, 0.0f, 0.0f));
     setMatrices();
-    corridor->render();
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, wallTexture);
+    wall->render();
+
+    //Ceiling
+    prog.setUniform("Material.Kd", vec3(0.4f, 0.4f, 0.4f));
+    prog.setUniform("Material.Ka", vec3(0.5f, 0.5f, 0.5f));
+    prog.setUniform("Material.Ks", vec3(0.2f, 0.2f, 0.2f));
+    prog.setUniform("Material.Shininess", 80.0f);
+
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(0.0f, 2.0f, 0.0f));
+    setMatrices();
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, wallTexture);
+    ceiling->render();
 }
 
 void SceneBasic_Uniform::resize(int w, int h)

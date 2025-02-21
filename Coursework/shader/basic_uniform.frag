@@ -3,10 +3,13 @@
 in vec3 Position;
 in vec3 Normal;
 in vec3 SkyBoxVec;
+in vec2 TexCoord;
 
 layout (location = 0) out vec4 FragColor;
 
 layout (binding = 0) uniform samplerCube SkyBoxTex;
+layout (binding = 1) uniform sampler2D TexColor;
+//layout (binding = 2) uniform sampler2D WallTexColor;
 
 uniform struct LightInfo {
     vec4 Position;
@@ -23,10 +26,13 @@ uniform struct MaterialInfo {
 
 vec3 blinnPhong(int light, vec3 position, vec3 n) {
     vec3 diffuse = vec3(0), spec = vec3(0);
-    vec3 ambient = lights[light].La * Material.Ka;
+
+    vec3 texColor = texture(TexColor, TexCoord).rgb;
+
+    vec3 ambient = lights[light].La * texColor;
     vec3 s = normalize(vec3(lights[light].Position.xyz) - position);
     float sDotN = max(dot(s, n), 0.0);
-    diffuse = Material.Kd * sDotN;
+    diffuse = texColor * sDotN;
     if(sDotN > 0.0) {
         vec3 v = normalize(-position.xyz);
         vec3 h = normalize(v + s);
