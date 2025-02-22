@@ -75,27 +75,43 @@ void SceneBasic_Uniform::initScene()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_CUBE_MAP, cubeTex);
 
-    //Lights
-    prog.setUniform("lights[0].Position", view * vec4(-1.0f, 1.0f, -10.0f, 1.0f));
-    prog.setUniform("lights[1].Position", view * vec4(1.0f, 1.0f, -10.0f, 1.0f));
-    prog.setUniform("lights[2].Position", view * vec4(-1.0f, 1.0f, 0.0f, 1.0f));
-    prog.setUniform("lights[3].Position", view * vec4(1.0f, 1.0f, 0.0f, 1.0f));
-    prog.setUniform("lights[4].Position", view * vec4(-1.0f, 1.0f, 10.0f, 1.0f));
-    prog.setUniform("lights[5].Position", view * vec4(1.0f, 1.0f, 10.0f, 1.0f));
+    //Spot lights
+    vec4 lightPositions[] = {
+    vec4(-2.0f, 2.0f, -10.0f, 1.0f),
+    vec4(2.0f, 2.0f, -10.0f, 1.0f),
+    vec4(-2.0f, -2.0f, -10.0f, 1.0f),
+    vec4(2.0f, -2.0f, -10.0f, 1.0f)
+    };
 
-    prog.setUniform("lights[0].L", vec3(0.8f, 0.0f, 0.0f));
-    prog.setUniform("lights[1].L", vec3(0.8f, 0.0f, 0.0f));
-    prog.setUniform("lights[2].L", vec3(0.8f, 0.0f, 0.0f));
-    prog.setUniform("lights[3].L", vec3(0.8f, 0.0f, 0.0f));
-    prog.setUniform("lights[4].L", vec3(0.8f, 0.0f, 0.0f));
-    prog.setUniform("lights[5].L", vec3(0.8f, 0.0f, 0.0f));
+    vec4 lightDirections[] = {
+        normalize(vec4(0.0f, -1.0f,  1.0f, 0.0f)),
+        normalize(vec4(0.0f, -1.0f,  1.0f, 0.0f)),
+        normalize(vec4(0.0f,  1.0f,  1.0f, 0.0f)),
+        normalize(vec4(0.0f,  1.0f,  1.0f, 0.0f))
+    };
 
-    prog.setUniform("lights[0].La", vec3(brightness, 0.0f, 0.0f));
-    prog.setUniform("lights[1].La", vec3(brightness, 0.0f, 0.0f));
-    prog.setUniform("lights[2].La", vec3(brightness, 0.0f, 0.0f));
-    prog.setUniform("lights[3].La", vec3(brightness, 0.0f, 0.0f));
-    prog.setUniform("lights[4].La", vec3(brightness, 0.0f, 0.0f));
-    prog.setUniform("lights[5].La", vec3(brightness, 0.0f, 0.0f));
+    for (int i = 0; i < 4; i++) {
+        std::stringstream position;
+        position << "lights[" << i << "].Position";
+        prog.setUniform(position.str().c_str(), view * lightPositions[i]);
+
+        std::stringstream direction;
+        direction << "lights[" << i << "].Direction";
+        prog.setUniform(direction.str().c_str(), vec3(view * lightDirections[i]));
+
+        std::stringstream L;
+        L << "lights[" << i << "].L";
+        prog.setUniform(L.str().c_str(), vec3(0.8f, 0.0f, 0.0f));
+
+        std::stringstream La;
+        La << "lights[" << i << "].La";
+        prog.setUniform(La.str().c_str(), vec3(brightness, 0.0f, 0.0f));
+    }
+
+    //Point light (The Star)
+    prog.setUniform("lights[4].Position", view * vec4(-20.0f, 1.0f, 0.0f, 1.0f));
+    prog.setUniform("lights[4].L", vec3(1.0f, 0.96f, 0.91f));
+    prog.setUniform("lights[4].La", vec3(0.05f, 0.0f, 0.0f));
 }
 
 void SceneBasic_Uniform::compile()
@@ -144,13 +160,33 @@ void SceneBasic_Uniform::update( float t )
     view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
 
 
-    //Lights
-    prog.setUniform("lights[0].Position", view * vec4(-1.0f, 1.0f, -10.0f, 1.0f));
-    prog.setUniform("lights[1].Position", view * vec4(1.0f, 1.0f, -10.0f, 1.0f));
-    prog.setUniform("lights[2].Position", view * vec4(-1.0f, 1.0f, 0.0f, 1.0f));
-    prog.setUniform("lights[3].Position", view * vec4(1.0f, 1.0f, 0.0f, 1.0f));
-    prog.setUniform("lights[4].Position", view * vec4(-1.0f, 1.0f, 10.0f, 1.0f));
-    prog.setUniform("lights[5].Position", view * vec4(1.0f, 1.0f, 10.0f, 1.0f));
+    //Spot Lights
+    vec4 lightPositions[] = {
+    vec4(-2.0f, 2.0f, -10.0f, 1.0f),
+    vec4(2.0f, 2.0f, -10.0f, 1.0f),
+    vec4(-2.0f, 2.0f, 10.0f, 1.0f),
+    vec4(2.0f, 2.0f, 10.0f, 1.0f)
+    };
+
+    vec4 lightDirections[] = {
+        normalize(vec4(0.0f, -1.0f, 1.0f, 0.0f)),
+        normalize(vec4(0.0f, -1.0f, 1.0f, 0.0f)),
+        normalize(vec4(0.0f, -1.0f, -1.0f, 0.0f)),
+        normalize(vec4(0.0f, -1.0f, -1.0f, 0.0f))
+    };
+
+    for (int i = 0; i < 4; i++) {
+        std::stringstream position;
+        position << "lights[" << i << "].Position";
+        prog.setUniform(position.str().c_str(), view * lightPositions[i]);
+
+        std::stringstream direction;
+        direction << "lights[" << i << "].Direction";
+        prog.setUniform(direction.str().c_str(), vec3(view * lightDirections[i]));
+    }
+
+    //Point Lights
+    prog.setUniform("lights[4].Position", view * vec4(-20.0f, 1.0f, 0.0f, 1.0f));
 
     if (negative) {
         brightness -= deltaTime / 10;
@@ -171,8 +207,6 @@ void SceneBasic_Uniform::update( float t )
     prog.setUniform("lights[1].La", vec3(brightness, 0.0f, 0.0f));
     prog.setUniform("lights[2].La", vec3(brightness, 0.0f, 0.0f));
     prog.setUniform("lights[3].La", vec3(brightness, 0.0f, 0.0f));
-    prog.setUniform("lights[4].La", vec3(brightness, 0.0f, 0.0f));
-    prog.setUniform("lights[5].La", vec3(brightness, 0.0f, 0.0f));
 }
 
 void SceneBasic_Uniform::render()
@@ -206,11 +240,6 @@ void SceneBasic_Uniform::render()
     windowWall->render();
 
     //Wall
-    prog.setUniform("Material.Kd", vec3(0.4f, 0.4f, 0.4f));
-    prog.setUniform("Material.Ka", vec3(0.5f, 0.5f, 0.5f));
-    prog.setUniform("Material.Ks", vec3(0.2f, 0.2f, 0.2f));
-    prog.setUniform("Material.Shininess", 80.0f);
-
     model = mat4(1.0f);
     model = glm::translate(model, vec3(2.0f, 0.0f, 0.0f));
     setMatrices();
@@ -219,11 +248,6 @@ void SceneBasic_Uniform::render()
     wall->render();
 
     //Ceiling
-    prog.setUniform("Material.Kd", vec3(0.4f, 0.4f, 0.4f));
-    prog.setUniform("Material.Ka", vec3(0.5f, 0.5f, 0.5f));
-    prog.setUniform("Material.Ks", vec3(0.2f, 0.2f, 0.2f));
-    prog.setUniform("Material.Shininess", 80.0f);
-
     model = mat4(1.0f);
     model = glm::translate(model, vec3(0.0f, 2.0f, 0.0f));
     setMatrices();

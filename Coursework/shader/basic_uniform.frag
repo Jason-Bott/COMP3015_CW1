@@ -15,6 +15,8 @@ uniform struct LightInfo {
     vec4 Position;
     vec3 La;
     vec3 L;
+    vec3 Direction;
+    float Cutoff;
 } lights[6];
 
 uniform struct MaterialInfo {
@@ -24,7 +26,7 @@ uniform struct MaterialInfo {
     float Shininess;
 } Material;
 
-vec3 blinnPhong(int light, vec3 position, vec3 n) {
+vec3 blinnPhongPoint(int light, vec3 position, vec3 n) {
     vec3 diffuse = vec3(0), spec = vec3(0);
 
     vec3 texColor = texture(TexColor, TexCoord).rgb;
@@ -41,18 +43,46 @@ vec3 blinnPhong(int light, vec3 position, vec3 n) {
     return ambient + (diffuse + spec) * lights[light].L;
 }
 
+vec3 blinnPhongSpot(int light, vec3 position, vec3 n) {
+    vec3 texColor = texture(TexColor, TexCoord).rgb;
+    vec3 lightDir = normalize(vec3(lights[light].Position.xyz) - position);
+    
+    float theta = dot(lightDir, normalize(-lights[light].Direction));
+    if (theta < lights[light].Cutoff) {
+        return lights[light].La * texColor;
+    }
+
+    vec3 ambient = lights[light].La * texColor;
+    float sDotN = max(dot(lightDir, n), 0.0);
+    vec3 diffuse = texColor * sDotN;
+
+    vec3 spec = vec3(0.0);
+    if (sDotN > 0.0) {
+        vec3 v = normalize(-position.xyz);
+        vec3 h = normalize(v + lightDir);
+        spec = Material.Ks * pow(max(dot(h, n), 0.0), Material.Shininess);
+    }
+
+    float intensity = smoothstep(lights[light].Cutoff, lights[light].Cutoff + 0.1, theta);    
+    return ambient + (diffuse + spec) * lights[light].L * intensity;
+}
+
 void main() {
     vec3 texColor = texture(SkyBoxTex, normalize(SkyBoxVec)).rgb;
-
     vec3 Color = vec3(0.0);
-    for (int i = 0; i < 6; i++) {
-        Color += blinnPhong(i, Position, Normal);
+    
+    //Spot lights first
+    for (int i = 0; i < 4; i++) {
+        Color += blinnPhongSpot(i, Position, Normal);
+    }
+
+    //Point lights last
+    for (int i = 4; i < 5; i++) {
+        Color += blinnPhongPoint(i, Position, Normal);
     }
 
     float Gamma = 2.2f;
-
     bool isSky = length(Position) > 30.0;
     vec3 finalColor = isSky ? texColor : pow(Color, vec3(1.0/Gamma));
-
     FragColor = vec4(finalColor, 1.0);
 }
