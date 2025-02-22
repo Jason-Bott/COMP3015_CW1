@@ -136,6 +136,8 @@ void SceneBasic_Uniform::update( float t )
     float deltaTime = t - lastFrameTime;
     lastFrameTime = t;
 
+    vec3 positionBefore = cameraPosition;
+
     //Movement
     const float movementSpeed = 5.0f * deltaTime;
     vec3 forwardDir = normalize(vec3(cameraFront.x, 0.0f, cameraFront.z));
@@ -158,7 +160,35 @@ void SceneBasic_Uniform::update( float t )
         cameraPosition += rightDir * movementSpeed;
     }
 
+    //Fix Height
     cameraPosition.y = fixedY;
+
+    float x = cameraPosition.x;
+    float z = cameraPosition.z;
+
+    //Wall Check
+    if (x < -1.5f) {
+        cameraPosition.x = -1.5f;
+    }
+    else if (x > 1.5f) {
+        cameraPosition.x = 1.5f;
+    }
+
+    //Doorframe Check
+    if (((z > 8.75f && z < 11.25f) || (z < -8.75f && z > -11.25f))) 
+    {
+        if (!(positionBefore.x < 0.5f && positionBefore.x > -0.5f)) 
+        {
+            cameraPosition.z = positionBefore.z;
+        }
+        else 
+        {
+            cameraPosition.x = positionBefore.x;
+        }
+    }
+
+    std::cout << cameraPosition.x << ", " << cameraPosition.z << std::endl;
+    //Update View
     view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
 
 
