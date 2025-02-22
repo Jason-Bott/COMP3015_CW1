@@ -22,10 +22,12 @@ private:
     std::unique_ptr<ObjMesh> windowWall;
     std::unique_ptr<ObjMesh> wall;
     std::unique_ptr<ObjMesh> ceiling;
+    std::unique_ptr<ObjMesh> doorframe;
 
     //Textures
     GLuint floorTexture;
     GLuint wallTexture;
+    GLuint doorframeTexture;
 
     GLSLProgram prog;
     void setMatrices();

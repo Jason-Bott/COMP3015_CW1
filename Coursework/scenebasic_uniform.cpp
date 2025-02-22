@@ -51,10 +51,12 @@ SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
     windowWall = ObjMesh::load("media/windowWall.obj", true);
     wall = ObjMesh::load("media/wall.obj", true);
     ceiling = ObjMesh::load("media/ceiling.obj", true);
+    doorframe = ObjMesh::load("media/doorframe.obj", true);
 
     //Textures
     floorTexture = Texture::loadTexture("media/textures/floor.png");
     wallTexture = Texture::loadTexture("media/textures/wall.png");
+    doorframeTexture = Texture::loadTexture("media/textures/doorframe.png");
 }
 
 void SceneBasic_Uniform::initScene()
@@ -254,6 +256,21 @@ void SceneBasic_Uniform::render()
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, wallTexture);
     ceiling->render();
+
+    //Doorframes
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(0.0f, 0.0f, -10.0f));
+    setMatrices();
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, doorframeTexture);
+    doorframe->render();
+
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(0.0f, 0.0f, 10.0f));
+    setMatrices();
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, doorframeTexture);
+    doorframe->render();
 }
 
 void SceneBasic_Uniform::resize(int w, int h)
