@@ -1,8 +1,8 @@
 ﻿  scenebasic_uniform.cpp
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(326,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(327,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(331,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(332,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(333,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
-C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(334,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(336,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(337,17): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(341,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(342,19): warning C4244: 'initializing': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(343,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
+C:\Users\jason\University\COMP3015_CW1\Coursework\scenebasic_uniform.cpp(344,13): warning C4244: '=': conversion from 'double' to 'float', possible loss of data
   Project_Template.vcxproj -> C:\Users\jason\University\COMP3015_CW1\Coursework\x64\Debug\Project_Template.exe

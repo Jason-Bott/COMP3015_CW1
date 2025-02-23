@@ -52,11 +52,13 @@ SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
     wall = ObjMesh::load("media/wall.obj", true);
     ceiling = ObjMesh::load("media/ceiling.obj", true);
     doorframe = ObjMesh::load("media/doorframe.obj", true);
+    spaceship = ObjMesh::load("media/spaceship.obj", true);
 
     //Textures
     floorTexture = Texture::loadTexture("media/textures/floor.png");
     wallTexture = Texture::loadTexture("media/textures/wall.png");
     doorframeTexture = Texture::loadTexture("media/textures/doorframe.png");
+    spaceshipTexture = Texture::loadTexture("media/textures/spaceship/StarSparrow_Red.png");
 }
 
 void SceneBasic_Uniform::initScene()
@@ -301,6 +303,14 @@ void SceneBasic_Uniform::render()
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, doorframeTexture);
     doorframe->render();
+
+    //Spaceship
+    model = mat4(1.0f);
+    model = glm::scale(model, vec3(0.5f, 0.5f, 0.5f));
+    setMatrices();
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, spaceshipTexture);
+    spaceship->render();
 }
 
 void SceneBasic_Uniform::resize(int w, int h)

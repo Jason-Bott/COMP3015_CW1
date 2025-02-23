@@ -23,11 +23,13 @@ private:
     std::unique_ptr<ObjMesh> wall;
     std::unique_ptr<ObjMesh> ceiling;
     std::unique_ptr<ObjMesh> doorframe;
+    std::unique_ptr<ObjMesh> spaceship;
 
     //Textures
     GLuint floorTexture;
     GLuint wallTexture;
     GLuint doorframeTexture;
+    GLuint spaceshipTexture;
 
     GLSLProgram prog;
     void setMatrices();
