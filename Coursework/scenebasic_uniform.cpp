@@ -187,7 +187,7 @@ void SceneBasic_Uniform::update( float t )
         }
     }
 
-    std::cout << cameraPosition.x << ", " << cameraPosition.z << std::endl;
+    //std::cout << cameraPosition.x << ", " << cameraPosition.z << std::endl;
     //Update View
     view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
 
