@@ -44,6 +44,12 @@ bool firstMouse = true;
 float brightness = 0.0f;
 bool negative = true;
 
+//For blastdoor control
+float negDoorHeight = -0.5f;
+bool negDoorOpening = false;
+float posDoorHeight = -0.5f;
+bool posDoorOpening = false;
+
 SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
 {
     //Objects
@@ -52,12 +58,14 @@ SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
     wall = ObjMesh::load("media/wall.obj", true);
     ceiling = ObjMesh::load("media/ceiling.obj", true);
     doorframe = ObjMesh::load("media/doorframe.obj", true);
+    blastdoor = ObjMesh::load("media/blastdoor.obj", true);
     spaceship = ObjMesh::load("media/spaceship.obj", true);
 
     //Textures
     floorTexture = Texture::loadTexture("media/textures/floor.png");
     wallTexture = Texture::loadTexture("media/textures/wall.png");
     doorframeTexture = Texture::loadTexture("media/textures/doorframe.png");
+    blastdoorTexture = Texture::loadTexture("media/textures/blastdoor.png");
     spaceshipTexture = Texture::loadTexture("media/textures/spaceship/StarSparrow_Red.png");
 }
 
@@ -168,7 +176,7 @@ void SceneBasic_Uniform::update( float t )
     float x = cameraPosition.x;
     float z = cameraPosition.z;
 
-    //Wall Check
+    //Wall Collision Check
     if (x < -1.5f) {
         cameraPosition.x = -1.5f;
     }
@@ -176,7 +184,7 @@ void SceneBasic_Uniform::update( float t )
         cameraPosition.x = 1.5f;
     }
 
-    //Doorframe Check
+    //Doorframe Collision Check
     if (((z > 8.75f && z < 11.25f) || (z < -8.75f && z > -11.25f))) 
     {
         if (!(positionBefore.x < 0.5f && positionBefore.x > -0.5f)) 
@@ -188,6 +196,49 @@ void SceneBasic_Uniform::update( float t )
             cameraPosition.x = positionBefore.x;
         }
     }
+
+    //Blastdoor Updates
+    if (positionBefore.z < 6.0f && cameraPosition.z >= 6.0f) {
+        posDoorOpening = true;
+    }
+    else if (positionBefore.z > 6.0f && cameraPosition.z <= 6.0f) {
+        posDoorOpening = false;
+    }
+
+    if (positionBefore.z > -6.0f && cameraPosition.z <= -6.0f) {
+        negDoorOpening = true;
+    }
+    else if (positionBefore.z < -6.0f && cameraPosition.z >= -6.0f) {
+        negDoorOpening = false;
+    }
+
+    float doorSpeed = 4.0f;
+    if (posDoorOpening == true) {
+        posDoorHeight += doorSpeed * deltaTime;
+        if (posDoorHeight > 2.5f) {
+            posDoorHeight = 2.5f;
+        }
+    }
+    else {
+        posDoorHeight -= doorSpeed * deltaTime;
+        if (posDoorHeight < -0.5f) {
+            posDoorHeight = -0.5f;
+        }
+    }
+
+    if (negDoorOpening == true) {
+        negDoorHeight += doorSpeed * deltaTime;
+        if (negDoorHeight > 2.5f) {
+            negDoorHeight = 2.5f;
+        }
+    }
+    else {
+        negDoorHeight -= doorSpeed * deltaTime;
+        if (negDoorHeight < -0.5f) {
+            negDoorHeight = -0.5f;
+        }
+    }
+
 
     //std::cout << cameraPosition.x << ", " << cameraPosition.z << std::endl;
     //Update View
@@ -303,6 +354,21 @@ void SceneBasic_Uniform::render()
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, doorframeTexture);
     doorframe->render();
+
+    //Blastdoors
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(0.0f, negDoorHeight, -10.0f));
+    setMatrices();
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, blastdoorTexture);
+    blastdoor->render();
+
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(0.0f, posDoorHeight, 10.0f));
+    setMatrices();
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, blastdoorTexture);
+    blastdoor->render();
 
     //Spaceship
     model = mat4(1.0f);
