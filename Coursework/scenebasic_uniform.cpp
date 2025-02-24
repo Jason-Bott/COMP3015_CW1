@@ -50,6 +50,10 @@ bool negDoorOpening = false;
 float posDoorHeight = -0.5f;
 bool posDoorOpening = false;
 
+//For spaceship control
+float shipHeight = -10.0f;
+bool shipRising = false;
+
 SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
 {
     //Objects
@@ -239,6 +243,20 @@ void SceneBasic_Uniform::update( float t )
         }
     }
 
+    //Spaceship Updates
+    float shipSpeed = 2.5f;
+
+    if (!shipRising) {
+        if (positionBefore.z > 6.0f && cameraPosition.z <= 6.0f) {
+            shipRising = true;
+        }
+    }
+    else {
+        shipHeight += shipSpeed * deltaTime;
+        if (shipHeight > -1.0f) {
+            shipHeight = -1.0f;
+        }
+    }
 
     //std::cout << cameraPosition.x << ", " << cameraPosition.z << std::endl;
     //Update View
@@ -288,10 +306,10 @@ void SceneBasic_Uniform::update( float t )
         }
     }
 
-    prog.setUniform("lights[0].La", vec3(brightness, 0.0f, 0.0f));
-    prog.setUniform("lights[1].La", vec3(brightness, 0.0f, 0.0f));
-    prog.setUniform("lights[2].La", vec3(brightness, 0.0f, 0.0f));
-    prog.setUniform("lights[3].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[0].La", vec3(brightness, 0.01f, 0.01f));
+    prog.setUniform("lights[1].La", vec3(brightness, 0.01f, 0.01f));
+    prog.setUniform("lights[2].La", vec3(brightness, 0.01f, 0.01f));
+    prog.setUniform("lights[3].La", vec3(brightness, 0.01f, 0.01f));
 }
 
 void SceneBasic_Uniform::render()
@@ -373,6 +391,8 @@ void SceneBasic_Uniform::render()
     //Spaceship
     model = mat4(1.0f);
     model = glm::scale(model, vec3(0.5f, 0.5f, 0.5f));
+    model = glm::rotate(model, glm::radians(90.0f), vec3(0.0f, 1.0f, 0.0f));
+    model = glm::translate(model, vec3(0.0f, shipHeight, -30.0f));
     setMatrices();
     glActiveTexture(GL_TEXTURE1);
     glBindTexture(GL_TEXTURE_2D, spaceshipTexture);
