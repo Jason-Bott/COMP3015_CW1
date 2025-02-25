@@ -1,15 +1,15 @@
 #version 460
 
+in vec2 TexCoord;
 in vec3 Position;
 in vec3 Normal;
 in vec3 SkyBoxVec;
-in vec2 TexCoord;
 
 layout (location = 0) out vec4 FragColor;
 
 layout (binding = 0) uniform samplerCube SkyBoxTex;
 layout (binding = 1) uniform sampler2D TexColor;
-//layout (binding = 2) uniform sampler2D WallTexColor;
+layout (binding = 2) uniform sampler2D NormalMap;
 
 uniform struct LightInfo {
     vec4 Position;

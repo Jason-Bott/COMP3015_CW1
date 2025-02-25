@@ -33,6 +33,10 @@ private:
     GLuint blastdoorTexture;
     GLuint spaceshipTexture;
 
+    //Normal Maps
+    GLuint defaultNormal;
+    GLuint spaceshipNormal;
+
     GLSLProgram prog;
     void setMatrices();
     void compile();

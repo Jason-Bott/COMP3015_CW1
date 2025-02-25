@@ -46,9 +46,7 @@ bool negative = true;
 
 //For blastdoor control
 float negDoorHeight = -0.5f;
-bool negDoorOpening = false;
 float posDoorHeight = -0.5f;
-bool posDoorOpening = false;
 
 //For spaceship control
 float shipHeight = -10.0f;
@@ -71,6 +69,10 @@ SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
     doorframeTexture = Texture::loadTexture("media/textures/doorframe.png");
     blastdoorTexture = Texture::loadTexture("media/textures/blastdoor.png");
     spaceshipTexture = Texture::loadTexture("media/textures/spaceship/StarSparrow_Red.png");
+
+    //Normal
+    defaultNormal = Texture::loadTexture("media/textures/normal.png");
+    spaceshipNormal = Texture::loadTexture("media/textures/spaceship/StarSparrow_Normal.png");
 }
 
 void SceneBasic_Uniform::initScene()
@@ -188,6 +190,13 @@ void SceneBasic_Uniform::update( float t )
         cameraPosition.x = 1.5f;
     }
 
+    if (z < -16.8f) {
+        cameraPosition.z = -16.8f;
+    }
+    else if (z > 16.8f) {
+        cameraPosition.z = 16.8f;
+    }
+
     //Doorframe Collision Check
     if (((z > 8.75f && z < 11.25f) || (z < -8.75f && z > -11.25f))) 
     {
@@ -202,22 +211,9 @@ void SceneBasic_Uniform::update( float t )
     }
 
     //Blastdoor Updates
-    if (positionBefore.z < 6.0f && cameraPosition.z >= 6.0f) {
-        posDoorOpening = true;
-    }
-    else if (positionBefore.z > 6.0f && cameraPosition.z <= 6.0f) {
-        posDoorOpening = false;
-    }
-
-    if (positionBefore.z > -6.0f && cameraPosition.z <= -6.0f) {
-        negDoorOpening = true;
-    }
-    else if (positionBefore.z < -6.0f && cameraPosition.z >= -6.0f) {
-        negDoorOpening = false;
-    }
-
     float doorSpeed = 4.0f;
-    if (posDoorOpening == true) {
+
+    if (cameraPosition.z >= 6.0f) {
         posDoorHeight += doorSpeed * deltaTime;
         if (posDoorHeight > 2.5f) {
             posDoorHeight = 2.5f;
@@ -230,7 +226,7 @@ void SceneBasic_Uniform::update( float t )
         }
     }
 
-    if (negDoorOpening == true) {
+    if (cameraPosition.z <= -6.0f) {
         negDoorHeight += doorSpeed * deltaTime;
         if (negDoorHeight > 2.5f) {
             negDoorHeight = 2.5f;
@@ -316,7 +312,9 @@ void SceneBasic_Uniform::render()
 {
     glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 
+    //
     //Skybox
+    //
     model = mat4(1.0f);
     setMatrices();
     sky.render();
@@ -326,76 +324,135 @@ void SceneBasic_Uniform::render()
     prog.setUniform("Material.Ks", vec3(0.2f, 0.2f, 0.2f));
     prog.setUniform("Material.Shininess", 80.0f);
 
+    //
     //Floor
+    //
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, floorTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, defaultNormal);
+
     model = mat4(1.0f);
     model = glm::translate(model, vec3(0.0f, -2.0f, 0.0f));
     setMatrices();
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, floorTexture);
     floor->render();
-
+    
+    //
     //Window Wall
+    //
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, wallTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, defaultNormal);
+
     model = mat4(1.0f);
     model = glm::translate(model, vec3(-2.2f, 0.0f, 0.0f));
     setMatrices();
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, wallTexture);
     windowWall->render();
 
+    //
     //Wall
+    //
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, wallTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, defaultNormal);
+
     model = mat4(1.0f);
     model = glm::translate(model, vec3(2.0f, 0.0f, 0.0f));
     setMatrices();
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, wallTexture);
     wall->render();
 
+    //
     //Ceiling
+    //
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, doorframeTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, defaultNormal);
+
     model = mat4(1.0f);
     model = glm::translate(model, vec3(0.0f, 2.0f, 0.0f));
     setMatrices();
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, wallTexture);
     ceiling->render();
 
+    //
     //Doorframes
+    //
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, doorframeTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, defaultNormal);
+
+    //Inner Neg
     model = mat4(1.0f);
     model = glm::translate(model, vec3(0.0f, 0.0f, -10.0f));
     setMatrices();
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, doorframeTexture);
     doorframe->render();
 
+    //Inner Pos
     model = mat4(1.0f);
     model = glm::translate(model, vec3(0.0f, 0.0f, 10.0f));
     setMatrices();
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, doorframeTexture);
     doorframe->render();
 
+    //Outer Neg
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(0.0f, 0.0f, -18.0f));
+    setMatrices();
+    doorframe->render();
+
+    //Outer Pos
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(0.0f, 0.0f, 18.0f));
+    setMatrices();
+    doorframe->render();
+
+    //
     //Blastdoors
+    //
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, blastdoorTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, defaultNormal);
+
+    //Inner Neg
     model = mat4(1.0f);
     model = glm::translate(model, vec3(0.0f, negDoorHeight, -10.0f));
     setMatrices();
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, blastdoorTexture);
     blastdoor->render();
 
+    //Inner Pos
     model = mat4(1.0f);
     model = glm::translate(model, vec3(0.0f, posDoorHeight, 10.0f));
     setMatrices();
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, blastdoorTexture);
     blastdoor->render();
 
+    //Outer Neg
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(0.0f, -0.5f, -18.0f));
+    setMatrices();
+    blastdoor->render();
+
+    //Outer Pos
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(0.0f, -0.5f, 18.0f));
+    setMatrices();
+    blastdoor->render();
+
+    //
     //Spaceship
+    //
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, spaceshipTexture);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, spaceshipNormal);
+
     model = mat4(1.0f);
     model = glm::scale(model, vec3(0.5f, 0.5f, 0.5f));
     model = glm::rotate(model, glm::radians(90.0f), vec3(0.0f, 1.0f, 0.0f));
     model = glm::translate(model, vec3(0.0f, shipHeight, -30.0f));
     setMatrices();
-    glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, spaceshipTexture);
     spaceship->render();
 }
 
