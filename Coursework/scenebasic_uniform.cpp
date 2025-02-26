@@ -285,7 +285,7 @@ void SceneBasic_Uniform::update( float t )
     }
 
     //Point Lights
-    prog.setUniform("lights[4].Position", view * vec4(-20.0f, 1.0f, 0.0f, 1.0f));
+    prog.setUniform("lights[4].Position", view * vec4(-20.0f, 0.0f, 0.0f, 1.0f));
 
     if (negative) {
         brightness -= deltaTime / 10;

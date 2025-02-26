@@ -3,6 +3,8 @@
 in vec2 TexCoord;
 in vec3 Position;
 in vec3 Normal;
+in vec3 Tangent;
+in vec3 Binormal;
 in vec3 SkyBoxVec;
 
 layout (location = 0) out vec4 FragColor;
@@ -71,6 +73,15 @@ void main() {
     vec3 texColor = texture(SkyBoxTex, normalize(SkyBoxVec)).rgb;
     vec3 Color = vec3(0.0);
     
+    mat3 toObjectLocal = mat3(
+      Tangent.x, Binormal.x, Normal.x,
+      Tangent.y, Binormal.y, Normal.y,
+      Tangent.z, Binormal.z, Normal.z
+    );
+
+    vec3 norm = texture(NormalMap, TexCoord).xyz;
+    norm.xy = 2.0 * norm.xy - 1.0;
+
     //Spot lights first
     for (int i = 0; i < 4; i++) {
         Color += blinnPhongSpot(i, Position, Normal);
