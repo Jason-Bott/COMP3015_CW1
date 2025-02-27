@@ -6,6 +6,7 @@ in vec3 Normal;
 in vec3 Tangent;
 in vec3 Binormal;
 in vec3 SkyBoxVec;
+in mat3 toObjectLocal;
 
 layout (location = 0) out vec4 FragColor;
 
@@ -38,7 +39,7 @@ vec3 blinnPhongPoint(int light, vec3 position, vec3 n) {
     float sDotN = max(dot(s, n), 0.0);
     diffuse = texColor * sDotN;
     if(sDotN > 0.0) {
-        vec3 v = normalize(-position.xyz);
+        vec3 v = toObjectLocal * normalize(-position.xyz);
         vec3 h = normalize(v + s);
         spec = Material.Ks * pow(max(dot(h, n), 0.0), Material.Shininess);
     }
@@ -60,7 +61,7 @@ vec3 blinnPhongSpot(int light, vec3 position, vec3 n) {
 
     vec3 spec = vec3(0.0);
     if (sDotN > 0.0) {
-        vec3 v = normalize(-position.xyz);
+        vec3 v = toObjectLocal * normalize(-position.xyz);
         vec3 h = normalize(v + lightDir);
         spec = Material.Ks * pow(max(dot(h, n), 0.0), Material.Shininess);
     }
@@ -72,12 +73,6 @@ vec3 blinnPhongSpot(int light, vec3 position, vec3 n) {
 void main() {
     vec3 texColor = texture(SkyBoxTex, normalize(SkyBoxVec)).rgb;
     vec3 Color = vec3(0.0);
-    
-    mat3 toObjectLocal = mat3(
-      Tangent.x, Binormal.x, Normal.x,
-      Tangent.y, Binormal.y, Normal.y,
-      Tangent.z, Binormal.z, Normal.z
-    );
 
     vec3 norm = texture(NormalMap, TexCoord).xyz;
     norm.xy = 2.0 * norm.xy - 1.0;
@@ -89,7 +84,7 @@ void main() {
 
     //Point lights last
     for (int i = 4; i < 5; i++) {
-        Color += blinnPhongPoint(i, Position, Normal);
+        Color += blinnPhongPoint(i, Position, norm);
     }
 
     float Gamma = 2.2f;

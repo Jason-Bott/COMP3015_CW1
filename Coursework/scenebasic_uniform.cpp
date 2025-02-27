@@ -66,6 +66,7 @@ SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
     //Textures
     floorTexture = Texture::loadTexture("media/textures/floor.png");
     wallTexture = Texture::loadTexture("media/textures/wall.png");
+    ceilingTexture = Texture::loadTexture("media/textures/ceiling.png");
     doorframeTexture = Texture::loadTexture("media/textures/doorframe.png");
     blastdoorTexture = Texture::loadTexture("media/textures/blastdoor.png");
     spaceshipTexture = Texture::loadTexture("media/textures/spaceship/StarSparrow_Red.png");
@@ -129,7 +130,7 @@ void SceneBasic_Uniform::initScene()
     //Point light (The Star)
     prog.setUniform("lights[4].Position", view * vec4(-20.0f, 1.0f, 0.0f, 1.0f));
     prog.setUniform("lights[4].L", vec3(1.0f, 0.96f, 0.91f));
-    prog.setUniform("lights[4].La", vec3(0.05f, 0.0f, 0.0f));
+    prog.setUniform("lights[4].La", vec3(0.2f, 0.2f, 0.2f));
 }
 
 void SceneBasic_Uniform::compile()
@@ -289,23 +290,23 @@ void SceneBasic_Uniform::update( float t )
 
     if (negative) {
         brightness -= deltaTime / 10;
-        if (brightness < -0.2f) {
-            brightness = -0.2f;
+        if (brightness < 0.1f) {
+            brightness = 0.1f;
             negative = false;
         }
     }
     else {
         brightness += deltaTime / 10;
-        if (brightness > -0.1f) {
-            brightness = -0.1f;
+        if (brightness > 0.2f) {
+            brightness = 0.2f;
             negative = true;
         }
     }
 
-    prog.setUniform("lights[0].La", vec3(brightness, 0.01f, 0.01f));
-    prog.setUniform("lights[1].La", vec3(brightness, 0.01f, 0.01f));
-    prog.setUniform("lights[2].La", vec3(brightness, 0.01f, 0.01f));
-    prog.setUniform("lights[3].La", vec3(brightness, 0.01f, 0.01f));
+    prog.setUniform("lights[0].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[1].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[2].La", vec3(brightness, 0.0f, 0.0f));
+    prog.setUniform("lights[3].La", vec3(brightness, 0.0f, 0.0f));
 }
 
 void SceneBasic_Uniform::render()
@@ -367,7 +368,7 @@ void SceneBasic_Uniform::render()
     //Ceiling
     //
     glActiveTexture(GL_TEXTURE1);
-    glBindTexture(GL_TEXTURE_2D, doorframeTexture);
+    glBindTexture(GL_TEXTURE_2D, ceilingTexture);
     glActiveTexture(GL_TEXTURE2);
     glBindTexture(GL_TEXTURE_2D, defaultNormal);
 

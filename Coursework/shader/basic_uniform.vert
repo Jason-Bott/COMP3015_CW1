@@ -11,6 +11,7 @@ out vec3 Normal;
 out vec3 Tangent;
 out vec3 Binormal;
 out vec3 SkyBoxVec;
+out mat3 toObjectLocal;
 
 uniform mat4 ModelViewMatrix;
 uniform mat3 NormalMatrix;
@@ -25,6 +26,12 @@ void main()
     Tangent = normalize(NormalMatrix * vec3(VertexTangent));
     Binormal = normalize(cross(Normal, Tangent)) * VertexTangent.w;
     SkyBoxVec = VertexPosition;
+
+    toObjectLocal = mat3(
+      Tangent.x, Binormal.x, Normal.x,
+      Tangent.y, Binormal.y, Normal.y,
+      Tangent.z, Binormal.z, Normal.z
+    );
 
     gl_Position = MVP * vec4(VertexPosition, 1.0);
 }

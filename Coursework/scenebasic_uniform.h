@@ -29,6 +29,7 @@ private:
     //Textures
     GLuint floorTexture;
     GLuint wallTexture;
+    GLuint ceilingTexture;
     GLuint doorframeTexture;
     GLuint blastdoorTexture;
     GLuint spaceshipTexture;
