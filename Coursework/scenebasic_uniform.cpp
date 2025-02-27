@@ -204,7 +204,7 @@ void SceneBasic_Uniform::update( float t )
         {
             cameraPosition.z = positionBefore.z;
         }
-        else 
+        else if(!(cameraPosition.x < 0.5f && cameraPosition.x > -0.5f))
         {
             cameraPosition.x = positionBefore.x;
         }
