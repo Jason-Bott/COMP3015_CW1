@@ -52,6 +52,10 @@ float posDoorHeight = -0.5f;
 float shipHeight = -10.0f;
 bool shipRising = false;
 
+//Collisons
+bool collide = true;
+bool keyPressed = false;
+
 SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
 {
     //Objects
@@ -183,31 +187,45 @@ void SceneBasic_Uniform::update( float t )
     float x = cameraPosition.x;
     float z = cameraPosition.z;
 
-    //Wall Collision Check
-    if (x < -1.5f) {
-        cameraPosition.x = -1.5f;
-    }
-    else if (x > 1.5f) {
-        cameraPosition.x = 1.5f;
-    }
-
-    if (z < -16.8f) {
-        cameraPosition.z = -16.8f;
-    }
-    else if (z > 16.8f) {
-        cameraPosition.z = 16.8f;
-    }
-
-    //Doorframe Collision Check
-    if (((z > 8.75f && z < 11.25f) || (z < -8.75f && z > -11.25f))) 
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS && !keyPressed)
     {
-        if (!(positionBefore.x < 0.5f && positionBefore.x > -0.5f)) 
-        {
-            cameraPosition.z = positionBefore.z;
+        collide = !collide;
+        keyPressed = true;
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_RELEASE) 
+    {
+        keyPressed = false;
+    }
+
+    if (collide) 
+    {
+        //Wall Collision Check
+        if (x < -1.5f) {
+            cameraPosition.x = -1.5f;
         }
-        else if(!(cameraPosition.x < 0.5f && cameraPosition.x > -0.5f))
+        else if (x > 1.5f) {
+            cameraPosition.x = 1.5f;
+        }
+
+        if (z < -16.8f) {
+            cameraPosition.z = -16.8f;
+        }
+        else if (z > 16.8f) {
+            cameraPosition.z = 16.8f;
+        }
+
+        //Doorframe Collision Check
+        if (((z > 8.75f && z < 11.25f) || (z < -8.75f && z > -11.25f)))
         {
-            cameraPosition.x = positionBefore.x;
+            if (!(positionBefore.x < 0.5f && positionBefore.x > -0.5f))
+            {
+                cameraPosition.z = positionBefore.z;
+            }
+            else if (!(cameraPosition.x < 0.5f && cameraPosition.x > -0.5f))
+            {
+                cameraPosition.x = positionBefore.x;
+            }
         }
     }
 
@@ -216,8 +234,8 @@ void SceneBasic_Uniform::update( float t )
 
     if (cameraPosition.z >= 6.0f) {
         posDoorHeight += doorSpeed * deltaTime;
-        if (posDoorHeight > 2.5f) {
-            posDoorHeight = 2.5f;
+        if (posDoorHeight > 2.51f) {
+            posDoorHeight = 2.51f;
         }
     }
     else {
@@ -229,8 +247,8 @@ void SceneBasic_Uniform::update( float t )
 
     if (cameraPosition.z <= -6.0f) {
         negDoorHeight += doorSpeed * deltaTime;
-        if (negDoorHeight > 2.5f) {
-            negDoorHeight = 2.5f;
+        if (negDoorHeight > 2.51f) {
+            negDoorHeight = 2.51f;
         }
     }
     else {
