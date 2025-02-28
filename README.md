@@ -6,6 +6,10 @@ For my CW1 I have created a prototype for what I will be aiming to create in CW2
 
 ![Game](/SampleScreens/game.png)
 
+## Video Link
+
+https://youtu.be/2pzCSWHPar4
+
 ## Software Used
 
 Visual Studio 2022 (17.12.4)
@@ -72,6 +76,18 @@ Here is the list of objects rendered in the order they are rendered:
 Each time the mouse is moved this function gets called to update the cameras front direction. This involves storing the pitch and yaw of the player and calculating the front direction accordingly.
 
 ![Mouse](/SampleScreens/mouse.png)
+
+### Vertex Shader
+
+My vertex shader transforms the vertex position using the MVP matrix for rendering the objects. It also calculates variables like the normal, tangent and binormal for my normal mapping and passes this all to the fragment shader along with the texture coordinates and skybox direction.
+
+![Vertex](/SampleScreens/vertex.png)
+
+### Fragment Shader
+
+The fragment shader applies Blinn-Phong lighting using 5 lights, 4 spot lights and 1 point light. This can be easily altered to any combination of spot lights and point lights. The shader samples a colour texture and a normal map adjusting normals and blending lighting contributions to create the scene shown. The skybox is also rendered whenever far enough away and gamma correction is applied for proper colour output.
+
+![Fragment](/SampleScreens/fragment.png)
 
 ## Credits
 
