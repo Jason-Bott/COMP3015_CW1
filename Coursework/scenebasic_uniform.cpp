@@ -278,7 +278,7 @@ void SceneBasic_Uniform::update( float t )
     view = lookAt(cameraPosition, cameraPosition + cameraFront, cameraUp);
 
 
-    //Spot Lights
+    //Red Lights (Spot Lights)
     vec4 lightPositions[] = {
     vec4(-2.0f, 2.0f, -10.0f, 1.0f),
     vec4(2.0f, 2.0f, -10.0f, 1.0f),
@@ -303,9 +303,6 @@ void SceneBasic_Uniform::update( float t )
         prog.setUniform(direction.str().c_str(), vec3(view * lightDirections[i]));
     }
 
-    //Point Lights
-    prog.setUniform("lights[4].Position", view * vec4(-20.0f, 0.0f, 0.0f, 1.0f));
-
     if (negative) {
         brightness -= deltaTime / 10;
         if (brightness < 0.1f) {
@@ -325,6 +322,9 @@ void SceneBasic_Uniform::update( float t )
     prog.setUniform("lights[1].La", vec3(brightness, 0.0f, 0.0f));
     prog.setUniform("lights[2].La", vec3(brightness, 0.0f, 0.0f));
     prog.setUniform("lights[3].La", vec3(brightness, 0.0f, 0.0f));
+
+    //Star Light (Point Light)
+    prog.setUniform("lights[4].Position", view * vec4(-20.0f, 0.0f, 0.0f, 1.0f));
 }
 
 void SceneBasic_Uniform::render()
