@@ -2,9 +2,10 @@
 
 ## Introduction
 
-For my CW1 I have created a prototype for what I will be aiming to create in CW2. The aim is to create a game in which the player has to navigate a repeating corridor that occasionally has anomalies making decisions on where to go based on their observations. For this prototype I have created a basic corridor with a pulsing red light to simulate a 'red alert' environment along with working blast doors and a spaceship as my model outside the windows.
+For my CW1 I have created a prototype for what I will be aiming to create in CW2. The aim is to create a game in which the player has to navigate a repeating corridor that occasionally has anomalies making decisions on where to go based on their observations. Currently the player hunts 5 hidden 'spaceship toys' to win the game. For this prototype I have created a basic corridor with a pulsing red light to simulate a 'red alert' environment along with working blast doors and spaceships as my model outside the windows.
 
 ![Game](/SampleScreens/game.png)
+![Win](/SampleScreens/win.png)
 
 ## Video Link
 
@@ -55,6 +56,12 @@ During the update function the game updates a few things in this order:
 
 ![Lighting](/SampleScreens/light.png)
 
+- Toy Collection
+	- Here at the very end of the update the game checks if the collection key (e) has been pressed
+	- If it has and the player is within a certain range of one of the toys then it is collected
+
+![Collection](/SampleScreens/collection.png)
+
 ### Render Function
 
 This is the function where each model is assigned its material, texture, normal map and position/scale/rotation. Each model in my scene uses the same material which is set at the start of this function however everything else is set again for each model. This includes the texture, normal and model (position/scale/rotation). For objects rendered multiple times like the blast doors that use the same texture and normal map, this only gets set once and the model is the only thing updated between their rendering.
@@ -68,6 +75,8 @@ Here is the list of objects rendered in the order they are rendered:
 - Doorframes x4
 - Blast doors x4
 - Spcaeship
+- Spaceship Toys x5
+- Posters x2
 
 ![Render](/SampleScreens/render.png)
 

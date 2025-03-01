@@ -54,7 +54,42 @@ bool shipRising = false;
 
 //Collisons
 bool collide = true;
-bool keyPressed = false;
+bool kPressed = false;
+
+//Toys
+bool ePressed = false;
+
+vec3 toyPositions[] = {
+    vec3(-2.5f, -0.4f, 7.3f),
+    vec3(1.3f, -1.9f, 17.5f),
+    vec3(1.92f, 0.0f, -0.3f),
+    vec3(-1.8f, -1.85f, -13.7f),
+    vec3(1.75f, 1.4f, -10.9f)
+};
+
+float toyRotations[] = {
+    135.0f,
+    225.0f,
+    90.0f,
+    -60.0f,
+    -90.0f
+};
+
+vec3 toyRotationDirections[] = {
+    vec3(0.0f, 1.0f, 0.0f),
+    vec3(0.0f, 1.0f, 0.0f),
+    vec3(0.0f, 0.0f, 1.0f),
+    vec3(0.0f, 0.0f, 1.0f),
+    vec3(1.0f, 0.0f, 0.0f)
+};
+
+bool foundToy[] = {
+    false,
+    false,
+    false,
+    false,
+    false
+};
 
 SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
 {
@@ -66,6 +101,7 @@ SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
     doorframe = ObjMesh::load("media/doorframe.obj", true);
     blastdoor = ObjMesh::load("media/blastdoor.obj", true);
     spaceship = ObjMesh::load("media/spaceship.obj", true);
+    poster = ObjMesh::load("media/poster.obj", true);
 
     //Textures
     floorTexture = Texture::loadTexture("media/textures/floor.png");
@@ -74,6 +110,15 @@ SceneBasic_Uniform::SceneBasic_Uniform() : angle(0.0f), sky(100.0f)
     doorframeTexture = Texture::loadTexture("media/textures/doorframe.png");
     blastdoorTexture = Texture::loadTexture("media/textures/blastdoor.png");
     spaceshipTexture = Texture::loadTexture("media/textures/spaceship/StarSparrow_Red.png");
+
+    //Posters
+    found0Poster = Texture::loadTexture("media/textures/posters/found0.png");
+    found1Poster = Texture::loadTexture("media/textures/posters/found1.png");
+    found2Poster = Texture::loadTexture("media/textures/posters/found2.png");
+    found3Poster = Texture::loadTexture("media/textures/posters/found3.png");
+    found4Poster = Texture::loadTexture("media/textures/posters/found4.png");
+    found5Poster = Texture::loadTexture("media/textures/posters/found5.png");
+    instructionsPoster = Texture::loadTexture("media/textures/posters/instructions.png");
 
     //Normal
     defaultNormal = Texture::loadTexture("media/textures/normal.png");
@@ -187,15 +232,15 @@ void SceneBasic_Uniform::update( float t )
     float x = cameraPosition.x;
     float z = cameraPosition.z;
 
-    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS && !keyPressed)
+    if (glfwGetKey(window, GLFW_KEY_K) == GLFW_PRESS && !kPressed)
     {
         collide = !collide;
-        keyPressed = true;
+        kPressed = true;
     }
 
     if (glfwGetKey(window, GLFW_KEY_K) == GLFW_RELEASE) 
     {
-        keyPressed = false;
+        kPressed = false;
     }
 
     if (collide) 
@@ -325,6 +370,27 @@ void SceneBasic_Uniform::update( float t )
 
     //Star Light (Point Light)
     prog.setUniform("lights[4].Position", view * vec4(-20.0f, 0.0f, 0.0f, 1.0f));
+
+    //Check Toy Collection
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_PRESS && !ePressed)
+    {
+        ePressed = true;
+        for (int i = 0; i < 5; i++) 
+        {
+            if (!foundToy[i]) 
+            {
+                if (cameraPosition.x < toyPositions[i].x + 2.0f && cameraPosition.x > toyPositions[i].x - 2.0f && cameraPosition.z < toyPositions[i].z + 2.0f && cameraPosition.z > toyPositions[i].z - 2.0f) 
+                {
+                    foundToy[i] = true;
+                }
+            }
+        }
+    }
+
+    if (glfwGetKey(window, GLFW_KEY_E) == GLFW_RELEASE)
+    {
+        ePressed = false;
+    }
 }
 
 void SceneBasic_Uniform::render()
@@ -473,6 +539,74 @@ void SceneBasic_Uniform::render()
     model = glm::translate(model, vec3(0.0f, shipHeight, -30.0f));
     setMatrices();
     spaceship->render();
+
+    //
+    //Toy Spaceships
+    //
+    int toysFound = 0;
+
+    for (int i = 0; i < 5; i++) 
+    {
+        if (!foundToy[i]) 
+        {
+            model = mat4(1.0f);
+            model = glm::translate(model, toyPositions[i]);
+            model = glm::scale(model, vec3(0.05f, 0.05f, 0.05f));
+            model = glm::rotate(model, glm::radians(toyRotations[i]), toyRotationDirections[i]);
+            setMatrices();
+            spaceship->render();
+        }
+        else 
+        {
+            toysFound++;
+        }
+    }
+
+    //
+    //Posters
+    //
+
+    //Instructions
+    glActiveTexture(GL_TEXTURE1);
+    glBindTexture(GL_TEXTURE_2D, instructionsPoster);
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, defaultNormal);
+
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(1.99f, 0.25f, -1.0f));
+    setMatrices();
+    poster->render();
+
+    //Toys Found
+    glActiveTexture(GL_TEXTURE1);
+    switch (toysFound)
+    {
+        case 0:
+            glBindTexture(GL_TEXTURE_2D, found0Poster);
+            break;
+        case 1:
+            glBindTexture(GL_TEXTURE_2D, found1Poster);
+            break;
+        case 2:
+            glBindTexture(GL_TEXTURE_2D, found2Poster);
+            break;
+        case 3:
+            glBindTexture(GL_TEXTURE_2D, found3Poster);
+            break;
+        case 4:
+            glBindTexture(GL_TEXTURE_2D, found4Poster);
+            break;
+        case 5:
+            glBindTexture(GL_TEXTURE_2D, found5Poster);
+            break;
+    }
+    glActiveTexture(GL_TEXTURE2);
+    glBindTexture(GL_TEXTURE_2D, defaultNormal);
+
+    model = mat4(1.0f);
+    model = glm::translate(model, vec3(1.99f, 0.25f, 1.0f));
+    setMatrices();
+    poster->render();
 }
 
 void SceneBasic_Uniform::resize(int w, int h)
